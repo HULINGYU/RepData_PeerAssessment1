@@ -1,20 +1,37 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 library(dplyr)
+```
+
+```
+## Warning: package 'dplyr' was built under R version 3.1.2
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(ggplot2)
 pro1<-read.csv("~/coursera/activity.csv")
 ```
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 istrue1<-complete.cases(pro1)
 pro1_1<-subset(pro1,istrue1==TRUE)
 pro1_1<-group_by(pro1_1,date)
@@ -22,14 +39,31 @@ pro1_1<-summarize(pro1_1,sum(steps))
 
 names(pro1_1)[2]<-"total_steps"
 hist(pro1_1$total_steps)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 mean_1<-mean(pro1_1$total_steps)
 median_1<-median(pro1_1$total_steps)
 mean_1
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median_1
 ```
 
+```
+## [1] 10765
+```
+
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 pro1_2<-subset(pro1,istrue1==TRUE)
 pro1_2<-group_by(pro1_2,interval)
 pro1_2<-summarize(pro1_2,mean(steps))
@@ -41,11 +75,14 @@ g<-ggplot(pro1_2,aes(interval,average_steps,group=1))
 g+geom_line()+labs(title="average steps per interval")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
 ## Imputing missing values
  My soluation is to replace the the NA values by the average steps of the interval.
 The dataset after replacing the NA values by average steps is the variable pro1_8
  
-```{r}
+
+```r
 pro1_3<-subset(pro1,istrue1==FALSE)
 
 pro1_4<-pro1_3
@@ -69,18 +106,32 @@ names(pro1_9)[2]<-"total_steps"
 
 
 hist(pro1_9$total_steps)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 mean_2<-mean(pro1_9$total_steps)
 mean_2
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 median_2<-median(pro1_9$total_steps)
 median_2
+```
 
+```
+## [1] 10766.19
 ```
 
 ## Are there differences in activity patterns between weekdays and weekends?
 The differences are obvious as we can see from the plot
-```{r}
 
-
+```r
 wk<-as.Date(pro1_8$date)
 wk<-weekdays(wk)
 pro1_10<-cbind(pro1_8,wk)
@@ -104,3 +155,5 @@ dat<-rbind(dat11,dat22)
 k<-ggplot(dat,aes(interval,average_steps,group=1))
 k+geom_line()+facet_grid(.~type)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
